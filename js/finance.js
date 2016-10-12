@@ -39,9 +39,10 @@ Finance.prototype.createScene = function() {
     var pos = new THREE.Vector3(0, 50, -50);
     var monthScale = new THREE.Vector3(80, 60, 1);
     var dayLabelOffset = new THREE.Vector3(0, -15, 10);
+    var expendLabelOffset = new THREE.Vector3(0, 2, 0);
     var sphereGeom = new THREE.SphereBufferGeometry(NODE_RADIUS, NODE_SEGMENTS, NODE_SEGMENTS);
     var sphereMat = new THREE.MeshPhongMaterial({color: 0xfed600});
-    var sphereMatSelected = new THREE.MeshPhongMaterial( {color: 0xffffff} );
+    var sphereMatSelected = new THREE.MeshPhongMaterial( {color: 0xffffff, emissive: 0xfed600} );
     var i, xStart=-100, xInc=35, yStart=10, zStart=0;
     var node;
     this.nodes = [];
@@ -58,9 +59,11 @@ Finance.prototype.createScene = function() {
         pos.add(dayLabelOffset);
         label = spriteManager.create(DATES.DayNumbers[i], pos, dayScale, 32, 1, true, false);
         this.scene.add(label);
+        pos.copy(node.position);
+        pos.add(expendLabelOffset);
+        label = spriteManager.create("£0.00", pos, dayScale, 32, 1, true, false);
+        this.scene.add(label);
     }
-
-
 };
 
 Finance.prototype.createGUI = function() {
