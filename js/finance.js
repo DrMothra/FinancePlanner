@@ -21,6 +21,9 @@ Finance.prototype.init = function(container) {
     //GUI
     this.guiControls = null;
     this.gui = null;
+
+    //Date info
+    this.currentDay = 0;
 };
 
 Finance.prototype.createScene = function() {
@@ -41,8 +44,8 @@ Finance.prototype.createScene = function() {
     var dayLabelOffset = new THREE.Vector3(0, -15, 10);
     var expendLabelOffset = new THREE.Vector3(0, 2, 0);
     var sphereGeom = new THREE.SphereBufferGeometry(NODE_RADIUS, NODE_SEGMENTS, NODE_SEGMENTS);
-    var sphereMat = new THREE.MeshPhongMaterial({color: 0xfed600});
-    var sphereMatSelected = new THREE.MeshPhongMaterial( {color: 0xffffff, emissive: 0xfed600} );
+    this.sphereMat = new THREE.MeshPhongMaterial({color: 0xfed600});
+    this.sphereMatSelected = new THREE.MeshPhongMaterial( {color: 0xffffff, emissive: 0xfed600} );
     var i, xStart=-100, xInc=35, yStart=10, zStart=0;
     var node;
     this.nodes = [];
@@ -51,7 +54,7 @@ Finance.prototype.createScene = function() {
 
     var dayScale = new THREE.Vector3(30, 30, 1);
     for(i=0; i<NUM_DAYS; ++i) {
-        node = new THREE.Mesh(sphereGeom, i===0 ? sphereMatSelected : sphereMat);
+        node = new THREE.Mesh(sphereGeom, i===this.currentDay ? this.sphereMatSelected : this.sphereMat);
         node.position.set(xStart+(xInc*i), yStart, zStart);
         this.nodes.push(node);
         this.scene.add(node);
@@ -86,15 +89,43 @@ Finance.prototype.update = function() {
     BaseApp.prototype.update.call(this);
 };
 
+Finance.prototype.nextDay = function() {
+    if(++this.currentDay > 30) {
+        this.currentDay = 30;
+        return;
+    }
+    this.nodes[this.currentDay].material = this.sphereMatSelected;
+    this.nodes[this.currentDay].material.needsUpdate = true;
+    this.nodes[this.currentDay-1].material = this.sphereMat;
+    this.nodes[this.currentDay-1].material.needsUpdate = true;
+};
+
+Finance.prototype.previousDay = function() {
+    if(--this.currentDay < 0) {
+        this.currentDay = 0;
+        return;
+    }
+    this.nodes[this.currentDay].material = this.sphereMatSelected;
+    this.nodes[this.currentDay].material.needsUpdate = true;
+    this.nodes[this.currentDay+1].material = this.sphereMat;
+    this.nodes[this.currentDay+1].material.needsUpdate = true;
+};
+
 $(document).ready(function() {
     //Initialise app
     var container = document.getElementById("WebGL-output");
     var app = new Finance();
     app.init(container);
     app.createScene();
-    app.createGUI();
+    //app.createGUI();
 
     //GUI callbacks
+    $('#right').on("click", function(event) {
+       app.nextDay();
+    });
+    $('#left').on("click", function(event) {
+        app.previousDay();
+    });
 
     app.run();
 });

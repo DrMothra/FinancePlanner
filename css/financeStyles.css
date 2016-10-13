@@ -8,3 +8,20 @@
 .test {
     color: gold;
 }
+.centre {
+    text-align: center;
+}
+.infoPanel {
+    position: absolute;
+}
+#expenseInfo {
+    top:0%;
+    right:0%;
+    width: 15%;
+    padding: 1%;
+    background-color: lightgrey;
+    border-radius: 10px;
+}
+#expenseInfo p {
+    text-align: center;
+}
