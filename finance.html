@@ -28,6 +28,7 @@
 <div id="WebGL-output">
 
 </div>
+
 <div id="expenseInfo" class="infoPanel">
     <p>October 2016</p>
     <div class="centre">
@@ -36,12 +37,34 @@
         </div>
         <p>Expenditure: 00.00</p>
         <div>
-            <button type="button">Add</button> <button type="button">Remove</button> <button type="button">Edit</button>
+            <button id="addExpense" type="button">Add</button> <button type="button">Remove</button> <button type="button">Edit</button>
         </div>
         <div>
             <button type="button">Save</button>
         </div>
     </div>
 </div>
+
+<div id="addForm" class="infoPanel noDisplay">
+    <p>Add Expense</p>
+    <form id="addExpenseForm">
+        <div class="input-group">
+            <span class="input-group-addon">Amount</span>
+            <input type="text" class="form-control" placeholder="amount">
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">Item  </span>
+            <input type="text" class="form-control" placeholder="item">
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">Tags  </span>
+            <input type="text" class="form-control" placeholder="tag">
+        </div>
+        <div class="input-group">
+            <input type="submit" class="form-control" value="Submit">
+        </div>
+    </form>
+</div>
+
 </body>
 </html>

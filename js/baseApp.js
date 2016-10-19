@@ -28,9 +28,9 @@ BaseApp.prototype.init = function(container) {
     this.createRenderer();
     this.createCamera();
     this.createControls();
-    this.stats = initStats();
+    //this.stats = initStats();
     this.statsShowing = false;
-    $("#Stats-output").hide();
+    //$("#Stats-output").hide();
 };
 
 BaseApp.prototype.createRenderer = function() {
@@ -70,17 +70,6 @@ BaseApp.prototype.createRenderer = function() {
 BaseApp.prototype.keydown = function(event) {
     //Key press functionality
     switch(event.keyCode) {
-        case 83: //'S'
-            if (this.stats) {
-                if (this.statsShowing) {
-                    $("#Stats-output").hide();
-                    this.statsShowing = false;
-                } else {
-                    $("#Stats-output").show();
-                    this.statsShowing = true;
-                }
-            }
-            break;
         case 80: //'P'
             console.log('Cam =', this.camera.position);
             console.log('Look =', this.controls.getLookAt());
@@ -182,24 +171,7 @@ BaseApp.prototype.run = function() {
     this.renderer.render( this.scene, this.camera );
     var _this = this;
     this.update();
-    if(this.stats) this.stats.update();
     requestAnimationFrame(function() {
         _this.run();
     });
 };
-
-function initStats() {
-
-    var stats = new Stats();
-
-    stats.setMode(0); // 0: fps, 1: ms
-
-    // Align top-left
-    stats.domElement.style.position = 'absolute';
-    stats.domElement.style.left = '0px';
-    stats.domElement.style.top = '0px';
-
-    $("#Stats-output").append( stats.domElement );
-
-    return stats;
-}

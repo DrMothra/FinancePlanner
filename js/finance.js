@@ -111,6 +111,10 @@ Finance.prototype.previousDay = function() {
     this.nodes[this.currentDay+1].material.needsUpdate = true;
 };
 
+Finance.prototype.showAddExpense = function() {
+    $('#addForm').show();
+};
+
 $(document).ready(function() {
     //Initialise app
     var container = document.getElementById("WebGL-output");
@@ -125,6 +129,16 @@ $(document).ready(function() {
     });
     $('#left').on("click", function(event) {
         app.previousDay();
+    });
+
+    $('#addExpense').on("click", function() {
+        app.showAddExpense();
+    });
+
+    $('#addExpenseForm').submit(function(event) {
+        event.preventDefault();
+        console.log("Submitted");
+        $('#addForm').hide();
     });
 
     app.run();

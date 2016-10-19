@@ -5,23 +5,28 @@
     margin: 0;
     overflow: hidden;
 }
-.test {
-    color: gold;
+.noDisplay {
+    display: none;
 }
 .centre {
     text-align: center;
 }
 .infoPanel {
     position: absolute;
+    background-color: lightgrey;
+    border-radius: 10px;
+    padding: 1%;
 }
 #expenseInfo {
     top:0%;
     right:0%;
     width: 15%;
-    padding: 1%;
-    background-color: lightgrey;
-    border-radius: 10px;
 }
 #expenseInfo p {
     text-align: center;
+}
+#addForm {
+    top:10%;
+    left:40%;
+    width: 30%;
 }
