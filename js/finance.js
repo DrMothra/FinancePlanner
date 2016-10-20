@@ -115,6 +115,33 @@ Finance.prototype.showAddExpense = function() {
     $('#addForm').show();
 };
 
+Finance.prototype.validateExpense = function() {
+    var form = document.forms["addExpenseForm"];
+    var amount = form["amount"].value;
+    var amountElem = $('#inputAmount');
+    var errorElem = $('#errorText');
+    var total = 3;
+    //amount = parseFloat(amount);
+    if(isNaN(amount)) {
+        console.log("Invalid number");
+        amountElem.addClass("has-error");
+        errorElem.show();
+    } else {
+        if(amount <= 0) {
+            console.log("Invalid number");
+            amountElem.addClass("has-error");
+            errorElem.show();
+        } else {
+            amountElem.removeClass("has-error");
+            errorElem.hide();
+            amount = parseFloat(amount);
+            console.log("Amount = ", amount);
+            total += amount;
+            console.log("Total ", total);
+        }
+    }
+};
+
 $(document).ready(function() {
     //Initialise app
     var container = document.getElementById("WebGL-output");
@@ -137,8 +164,7 @@ $(document).ready(function() {
 
     $('#addExpenseForm').submit(function(event) {
         event.preventDefault();
-        console.log("Submitted");
-        $('#addForm').hide();
+        app.validateExpense();
     });
 
     app.run();

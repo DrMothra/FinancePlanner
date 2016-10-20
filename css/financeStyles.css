@@ -30,3 +30,7 @@
     left:40%;
     width: 30%;
 }
+#errorText {
+    margin-left: 55%;
+    color: red;
+}

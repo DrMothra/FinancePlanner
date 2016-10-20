@@ -46,19 +46,21 @@
 </div>
 
 <div id="addForm" class="infoPanel noDisplay">
-    <p>Add Expense</p>
+    <div>
+        <span>Add Expense</span><span id="errorText" class="noDisplay">Invalid number!</span>
+    </div>
     <form id="addExpenseForm">
-        <div class="input-group">
+        <div id="inputAmount" class="input-group">
             <span class="input-group-addon">Amount</span>
-            <input type="text" class="form-control" placeholder="amount">
+            <input type="text" class="form-control" name="amount">
         </div>
         <div class="input-group">
             <span class="input-group-addon">Item  </span>
-            <input type="text" class="form-control" placeholder="item">
+            <input type="text" class="form-control">
         </div>
         <div class="input-group">
             <span class="input-group-addon">Tags  </span>
-            <input type="text" class="form-control" placeholder="tag">
+            <input type="text" class="form-control">
         </div>
         <div class="input-group">
             <input type="submit" class="form-control" value="Submit">
