@@ -118,26 +118,36 @@ Finance.prototype.showAddExpense = function() {
 Finance.prototype.validateExpense = function() {
     var form = document.forms["addExpenseForm"];
     var amount = form["amount"].value;
+    var item = form["item"].value;
+    var tags = form["tags"].value;
     var amountElem = $('#inputAmount');
     var errorElem = $('#errorText');
-    var total = 3;
-    //amount = parseFloat(amount);
+    var label;
+
     if(isNaN(amount)) {
         console.log("Invalid number");
         amountElem.addClass("has-error");
+        errorElem.html("Invalid number!");
         errorElem.show();
     } else {
         if(amount <= 0) {
             console.log("Invalid number");
             amountElem.addClass("has-error");
+            errorElem.html("Invalid number!");
             errorElem.show();
         } else {
             amountElem.removeClass("has-error");
             errorElem.hide();
             amount = parseFloat(amount);
-            console.log("Amount = ", amount);
-            total += amount;
-            console.log("Total ", total);
+            label = spriteManager.getSpriteByIndex(2);
+            //Ensure text is valid as well
+            if(item === "") {
+                errorElem.html("No item text!");
+                errorElem.show();
+                return;
+            }
+            console.log("Sprite = ", label);
+            spriteManager.setText(label, '£'+amount);
         }
     }
 };

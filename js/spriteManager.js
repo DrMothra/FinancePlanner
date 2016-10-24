@@ -13,6 +13,8 @@ var spriteManager = (function () {
     var defaultFontSize = 24;
     var defaultVisibility = false;
     var defaultRadius = 20;
+    var canvasWidth = 400;
+    var currentFontSize;
 
     var labels = [];
     var labelNames = [];
@@ -20,9 +22,10 @@ var spriteManager = (function () {
     return {
         create: function(name, position, scale, fontSize, opacity, visible, rect) {
             //Create label
+            currentFontSize = fontSize;
             var canvas = document.createElement('canvas');
             var spriteName = ' ' + name + ' ';
-            canvas.width = 400;
+            canvas.width = canvasWidth;
 
             var context = canvas.getContext('2d');
             context.font = fontSize + "px " + defaultFontFace;
@@ -63,6 +66,7 @@ var spriteManager = (function () {
 
             var sprite = new THREE.Sprite(spriteMaterial);
             labels.push(sprite);
+            sprite.index = labels.length-1;
             sprite.name = name + 'Label';
             labelNames.push(name);
             sprite.visible = visible;
@@ -117,6 +121,33 @@ var spriteManager = (function () {
             }
 
             return null;
+        },
+
+        getSpriteByIndex: function(index) {
+            for(var i=0; i<labels.length; ++i) {
+                if(labels[i].index === index) {
+                    return labels[i];
+                }
+            }
+
+            return null;
+        },
+
+        setText: function(sprite, text) {
+            for(var i=0; i<labels.length; ++i) {
+                if(labels[i] === sprite) {
+                    break;
+                }
+            }
+            var canvas = labels[i].material.map.image;
+            var context = canvas.getContext('2d');
+            var metrics = context.measureText( text );
+            var textWidth = metrics.width;
+            var offset = (canvasWidth - (textWidth + defaultBorderThickness))/2;
+
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.fillText(text, defaultBorderThickness + offset, currentFontSize + defaultBorderThickness);
+            labels[i].material.map.needsUpdate = true;
         }
     };
 })();
