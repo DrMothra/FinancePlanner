@@ -146,8 +146,13 @@ Finance.prototype.validateExpense = function() {
                 errorElem.show();
                 return;
             }
-            console.log("Sprite = ", label);
             spriteManager.setText(label, '£'+amount);
+            var date = {};
+            date.year = 2016;
+            date.month = 9;
+            date.day = 26;
+            ExpenseManager.addToExpense(date, amount, item, tags);
+            $('#addForm').hide();
         }
     }
 };
