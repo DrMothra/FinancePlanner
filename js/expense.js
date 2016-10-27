@@ -23,5 +23,9 @@ Expense.prototype = {
         var info = { item: item,
             tags: tags};
         this.priceInfo.push(info);
+    },
+
+    getTotal: function() {
+        return this.total;
     }
 };

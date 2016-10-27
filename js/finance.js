@@ -32,7 +32,7 @@ Finance.prototype.createScene = function() {
 
     //Floor
     var planeGeom = new THREE.PlaneBufferGeometry(FLOOR_WIDTH, FLOOR_HEIGHT, SEGMENTS, SEGMENTS);
-    var planeMat = new THREE.MeshLambertMaterial( {color: 0xb5b5b5});
+    var planeMat = new THREE.MeshLambertMaterial( {color: 0x444444});
     var plane = new THREE.Mesh(planeGeom, planeMat);
     plane.rotation.x = -Math.PI/2;
     this.scene.add(plane);
@@ -71,14 +71,19 @@ Finance.prototype.createScene = function() {
 
 Finance.prototype.createGUI = function() {
     //GUI - using dat.GUI
+    var _this = this;
     this.guiControls = new function() {
-
+        this.Background = '#5c5f64';
     };
 
     var gui = new dat.GUI();
 
     //Add some folders
     this.guiAppear = gui.addFolder("Appearance");
+    this.guiAppear.addColor(this.guiControls, 'Background').onChange(function (value) {
+        _this.renderer.setClearColor(value, 1.0);
+    });
+
     this.guiData = gui.addFolder("Data");
     this.gui = gui;
 };
@@ -146,12 +151,15 @@ Finance.prototype.validateExpense = function() {
                 errorElem.show();
                 return;
             }
-            spriteManager.setText(label, '£'+amount);
             var date = {};
             date.year = 2016;
             date.month = 9;
             date.day = 26;
-            ExpenseManager.addToExpense(date, amount, item, tags);
+            var expense = ExpenseManager.updateExpense(date, amount, item, tags);
+            var total = expense.getTotal();
+            label.position.y = 10 + total;
+            spriteManager.setText(label, '£'+total);
+            this.nodes[0].position.y = 10 + total;
             $('#addForm').hide();
         }
     }
@@ -163,7 +171,7 @@ $(document).ready(function() {
     var app = new Finance();
     app.init(container);
     app.createScene();
-    //app.createGUI();
+    app.createGUI();
 
     //GUI callbacks
     $('#right').on("click", function(event) {

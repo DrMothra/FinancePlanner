@@ -8,7 +8,7 @@ var ExpenseManager = (function() {
     var expenses = [];
 
     return {
-        addToExpense: function(date, amount, item, tags) {
+        updateExpense: function(date, amount, item, tags) {
             var index = this.findExpense(date);
             var expense;
             if(index < 0) {
@@ -18,6 +18,8 @@ var ExpenseManager = (function() {
                 expense = expenses[index];
                 expense.update(amount, item, tags);
             }
+
+            return expense;
         },
 
         findExpense: function(date) {
