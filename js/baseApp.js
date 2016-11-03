@@ -35,7 +35,7 @@ BaseApp.prototype.init = function(container) {
 
 BaseApp.prototype.createRenderer = function() {
     this.renderer = new THREE.WebGLRenderer( {antialias : true, alpha: true});
-    this.renderer.setClearColor(0x233147, 1.0);
+    this.renderer.setClearColor(0xd8dee8, 1.0);
     this.renderer.shadowMapEnabled = true;
     var isMSIE = /*@cc_on!@*/0;
 

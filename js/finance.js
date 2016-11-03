@@ -22,8 +22,16 @@ Finance.prototype.init = function(container) {
     this.guiControls = null;
     this.gui = null;
 
+    //Current item
+    this.currentAmount = 0;
+    this.currentItem = undefined;
+    this.currentTags = [];
+
     //Date info
-    this.currentDay = 0;
+    this.currentDate = {};
+    this.currentDate.day = 0;
+    this.currentDate.month = 9;
+    this.currentDate.year = 2016;
 };
 
 Finance.prototype.createScene = function() {
@@ -54,7 +62,7 @@ Finance.prototype.createScene = function() {
 
     var dayScale = new THREE.Vector3(30, 30, 1);
     for(i=0; i<NUM_DAYS; ++i) {
-        node = new THREE.Mesh(sphereGeom, i===this.currentDay ? this.sphereMatSelected : this.sphereMat);
+        node = new THREE.Mesh(sphereGeom, i===this.currentDate.day ? this.sphereMatSelected : this.sphereMat);
         node.position.set(xStart+(xInc*i), yStart, zStart);
         this.nodes.push(node);
         this.scene.add(node);
@@ -67,13 +75,15 @@ Finance.prototype.createScene = function() {
         label = spriteManager.create("£0.00", pos, dayScale, 32, 1, true, false);
         this.scene.add(label);
     }
+    this.groundOffset = yStart;
+    this.labelOffset = expendLabelOffset.y;
 };
 
 Finance.prototype.createGUI = function() {
     //GUI - using dat.GUI
     var _this = this;
     this.guiControls = new function() {
-        this.Background = '#5c5f64';
+        this.Background = '#d8dee8';
     };
 
     var gui = new dat.GUI();
@@ -95,25 +105,40 @@ Finance.prototype.update = function() {
 };
 
 Finance.prototype.nextDay = function() {
-    if(++this.currentDay > 30) {
-        this.currentDay = 30;
+    if(++this.currentDate.day > 30) {
+        this.currentDate.day = 30;
         return;
     }
-    this.nodes[this.currentDay].material = this.sphereMatSelected;
-    this.nodes[this.currentDay].material.needsUpdate = true;
-    this.nodes[this.currentDay-1].material = this.sphereMat;
-    this.nodes[this.currentDay-1].material.needsUpdate = true;
+
+    var day = this.currentDate.day;
+    this.nodes[day].material = this.sphereMatSelected;
+    this.nodes[day].material.needsUpdate = true;
+    this.nodes[day-1].material = this.sphereMat;
+    this.nodes[day-1].material.needsUpdate = true;
+    $('#day').html(DATES.DayNumbers[day]);
+
+    this.updateExpenditure();
 };
 
 Finance.prototype.previousDay = function() {
-    if(--this.currentDay < 0) {
-        this.currentDay = 0;
+    if(--this.currentDate.day < 0) {
+        this.currentDate.day = 0;
         return;
     }
-    this.nodes[this.currentDay].material = this.sphereMatSelected;
-    this.nodes[this.currentDay].material.needsUpdate = true;
-    this.nodes[this.currentDay+1].material = this.sphereMat;
-    this.nodes[this.currentDay+1].material.needsUpdate = true;
+
+    var day = this.currentDate.day;
+    this.nodes[day].material = this.sphereMatSelected;
+    this.nodes[day].material.needsUpdate = true;
+    this.nodes[day+1].material = this.sphereMat;
+    this.nodes[day+1].material.needsUpdate = true;
+    $('#day').html(DATES.DayNumbers[day]);
+
+    this.updateExpenditure();
+};
+
+Finance.prototype.updateExpenditure = function() {
+    var expense = ExpenseManager.getExpense(this.currentDate);
+    $('#expenditure').html(expense !== undefined ? expense.getTotal() : "00.00");
 };
 
 Finance.prototype.showAddExpense = function() {
@@ -133,36 +158,43 @@ Finance.prototype.validateExpense = function() {
         console.log("Invalid number");
         amountElem.addClass("has-error");
         errorElem.html("Invalid number!");
-        errorElem.show();
     } else {
         if(amount <= 0) {
             console.log("Invalid number");
             amountElem.addClass("has-error");
             errorElem.html("Invalid number!");
-            errorElem.show();
         } else {
             amountElem.removeClass("has-error");
+            errorElem.html("No item text!");
             errorElem.hide();
             amount = parseFloat(amount);
-            label = spriteManager.getSpriteByIndex(2);
             //Ensure text is valid as well
-            if(item === "") {
-                errorElem.html("No item text!");
-                errorElem.show();
-                return;
+            if(item !== "") {
+                $('#addForm').hide();
+                this.currentAmount = amount;
+                this.currentItem = item;
+                this.currentTags = tags;
+                return true;
             }
-            var date = {};
-            date.year = 2016;
-            date.month = 9;
-            date.day = 26;
-            var expense = ExpenseManager.updateExpense(date, amount, item, tags);
-            var total = expense.getTotal();
-            label.position.y = 10 + total;
-            spriteManager.setText(label, '£'+total);
-            this.nodes[0].position.y = 10 + total;
-            $('#addForm').hide();
         }
     }
+
+    errorElem.show();
+    return false;
+};
+
+Finance.prototype.addExpense = function() {
+    var expense = ExpenseManager.updateExpense(this.currentDate, this.currentAmount, this.currentItem, this.currentTags);
+    this.updateCurrentNode(expense);
+};
+
+Finance.prototype.updateCurrentNode = function(expense) {
+    var day = this.currentDate.day;
+    var label = spriteManager.getSpriteByIndex((day*2)+2);
+    var total = expense.getTotal();
+    label.position.y = this.groundOffset + this.labelOffset + total;
+    spriteManager.setText(label, '£'+total);
+    this.nodes[day].position.y = this.groundOffset + total;
 };
 
 $(document).ready(function() {
@@ -187,7 +219,9 @@ $(document).ready(function() {
 
     $('#addExpenseForm').submit(function(event) {
         event.preventDefault();
-        app.validateExpense();
+        if(app.validateExpense()) {
+            app.addExpense();
+        }
     });
 
     app.run();
