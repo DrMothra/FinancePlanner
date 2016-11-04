@@ -20,7 +20,7 @@
 
     <link rel="stylesheet" href="css/bootstrap.min.css?v=0.1">
     <link rel="stylesheet" href="css/bootstrap-theme.min.css?v=0.1">
-    <link href="css/financeStyles.css?v=0.2" rel="stylesheet" type="text/css">
+    <link href="css/financeStyles.css?v=0.3" rel="stylesheet" type="text/css">
 </head>
 <body>
 
@@ -41,7 +41,7 @@
             <span>Expenditure: </span><span id="expenditure">00.00</span>
         </div>
         <div>
-            <button id="addExpense" type="button">Add</button> <button type="button">Remove</button> <button type="button">Edit</button>
+            <button id="addExpense" type="button">Add</button> <button id="removeItem" type="button">Remove</button> <button type="button">Edit</button>
         </div>
         <div>
             <button type="button">Save</button>
@@ -71,6 +71,19 @@
             <input type="submit" class="form-control" value="Submit">
         </div>
     </form>
+</div>
+
+<div id="removeForm" class="infoPanel noDisplay">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Amount</th>
+                <th>Item</th>
+                <th>Tags</th>
+            </tr>
+        </thead>
+    </table>
 </div>
 
 </body>

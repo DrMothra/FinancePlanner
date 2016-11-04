@@ -138,7 +138,7 @@ Finance.prototype.previousDay = function() {
 
 Finance.prototype.updateExpenditure = function() {
     var expense = ExpenseManager.getExpense(this.currentDate);
-    $('#expenditure').html(expense !== undefined ? expense.getTotal() : "00.00");
+    $('#expenditure').html(expense !== undefined ? expense.getTotal().toFixed(2) : "00.00");
 };
 
 Finance.prototype.showAddExpense = function() {
@@ -186,6 +186,11 @@ Finance.prototype.validateExpense = function() {
 Finance.prototype.addExpense = function() {
     var expense = ExpenseManager.updateExpense(this.currentDate, this.currentAmount, this.currentItem, this.currentTags);
     this.updateCurrentNode(expense);
+    this.updateExpenditure();
+};
+
+Finance.prototype.removeExpense = function() {
+    $('#removeForm').show();
 };
 
 Finance.prototype.updateCurrentNode = function(expense) {
@@ -193,7 +198,7 @@ Finance.prototype.updateCurrentNode = function(expense) {
     var label = spriteManager.getSpriteByIndex((day*2)+2);
     var total = expense.getTotal();
     label.position.y = this.groundOffset + this.labelOffset + total;
-    spriteManager.setText(label, '£'+total);
+    spriteManager.setTextAmount(label, total);
     this.nodes[day].position.y = this.groundOffset + total;
 };
 
@@ -222,6 +227,10 @@ $(document).ready(function() {
         if(app.validateExpense()) {
             app.addExpense();
         }
+    });
+
+    $('#removeItem').on("click", function(event) {
+        app.removeExpense();
     });
 
     app.run();

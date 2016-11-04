@@ -148,6 +148,25 @@ var spriteManager = (function () {
             context.clearRect(0, 0, canvas.width, canvas.height);
             context.fillText(text, defaultBorderThickness + offset, currentFontSize + defaultBorderThickness);
             labels[i].material.map.needsUpdate = true;
+        },
+
+        setTextAmount: function(sprite, text) {
+            for(var i=0; i<labels.length; ++i) {
+                if(labels[i] === sprite) {
+                    break;
+                }
+            }
+            var amount = text.toFixed(2);
+            amount = '£'+amount;
+            var canvas = labels[i].material.map.image;
+            var context = canvas.getContext('2d');
+            var metrics = context.measureText( amount );
+            var textWidth = metrics.width;
+            var offset = (canvasWidth - (textWidth + defaultBorderThickness))/2;
+
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.fillText(amount, defaultBorderThickness + offset, currentFontSize + defaultBorderThickness);
+            labels[i].material.map.needsUpdate = true;
         }
     };
 })();
